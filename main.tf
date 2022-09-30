@@ -83,12 +83,24 @@ resource "aws_instance" "app-instance"{
     associate_public_ip_address = true
     key_name = "Newlogin"
     tags =  { Name: "${var.env_prefix}-instance-1" } 
-    user_data =  <<EOF
-                    #/bin/bash 
-                    sudo yum update -y 
-                    sudo yum install docker -y 
-                    sudo usermod -aG docker ec2-user
-                    docker run -p 8080:80 nginx
-                 EOF
-  }
+    user_data =  file ("script.sh")
+    
+   # connection {
+   #    type ="ssh"
+   #    host = self.public_ip 
+   #    user = "ec2-user"
+   #}
+   #provisioner "file" {
+   #  source = "script.sh"
+   #  destination = "/home/ec2-user/script.sh"
+   #}
+   # provisioner "remote-exec" {
+   #     script = file("script.sh")
+   # }
+   # provisioner "local-exec"{
+   #     command = "echo ${self.public_ip} > output.txt"
+    
+   # } 
+
+}
 
